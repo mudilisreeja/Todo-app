@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./App.css";
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -21,7 +22,6 @@ function App() {
       const data = await response.json();
       setTasks(data);
     } catch (error) {
-      console.error("Error fetching tasks:", error);
       setError("Failed to fetch tasks. Please try again later.");
     } finally {
       setLoading(false);
@@ -34,8 +34,8 @@ function App() {
   };
 
   const addTask = async () => {
-    if (newTask.title.trim() === "") {
-      setError("Task title cannot be empty!");
+    if (newTask.title.trim() === "" || newTask.description.trim() === "") {
+      setError("Both title and description are required!");
       return;
     }
 
@@ -43,9 +43,7 @@ function App() {
     try {
       const response = await fetch("http://127.0.0.1:8000/tasks/", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newTask),
       });
 
@@ -56,37 +54,17 @@ function App() {
       fetchTasks();
       setNewTask({ title: "", description: "" });
     } catch (error) {
-      console.error("Error adding task:", error);
       setError("Failed to add task. Please try again.");
     }
   };
 
-  const editTask = async (taskId, currentTask) => {
-    const updatedTitle = prompt("Edit Task Title:", currentTask.title);
-    const updatedDescription = prompt(
-      "Edit Task Description:",
-      currentTask.description
-    );
-
-    if (
-      (updatedTitle !== null && updatedTitle.trim() === "") ||
-      (updatedDescription !== null && updatedDescription.trim() === "")
-    ) {
-      setError("Task title and description cannot be empty!");
-      return;
-    }
-
-    setError("");
+  // Function to update task status
+  const updateTaskStatus = async (taskId, newStatus) => {
     try {
       const response = await fetch(`http://127.0.0.1:8000/tasks/${taskId}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: updatedTitle,
-          description: updatedDescription,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }), // Only updating status
       });
 
       if (!response.ok) {
@@ -95,7 +73,6 @@ function App() {
 
       fetchTasks();
     } catch (error) {
-      console.error("Error updating task:", error);
       setError("Failed to update task. Please try again.");
     }
   };
@@ -112,7 +89,6 @@ function App() {
 
       fetchTasks();
     } catch (error) {
-      console.error("Error deleting task:", error);
       setError("Failed to delete task. Please try again.");
     }
   };
@@ -152,12 +128,19 @@ function App() {
               <span className="text">
                 <strong>{task.title}</strong>: {task.description}
               </span>
-              <button
-                className="edit-button"
-                onClick={() => editTask(task.id, task)}
+
+              {/* Status Dropdown */}
+              <select
+                value={task.status}
+                onChange={(e) => updateTaskStatus(task.id, e.target.value)}
               >
-                Edit
-              </button>
+                <option value="pending">Pending</option>
+                <option value="in_progress">In Progress</option>
+                <option value="completed">Completed</option>
+                <option value="hold">Hold</option>
+                <option value="cancel">Cancel</option>
+              </select>
+
               <button
                 className="delete-button"
                 onClick={() => deleteTask(task.id)}
