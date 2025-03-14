@@ -3,7 +3,7 @@ import "./App.css";
 
 function App() {
   const [tasks, setTasks] = useState([]);
-  const [newTask, setNewTask] = useState({ title: "", description: "", status: "pending" });
+  const [newTask, setNewTask] = useState({ title: "", description: "", status: "todo" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [user, setUser] = useState(null);
@@ -287,7 +287,7 @@ function App() {
   if (!user) {
     return (
       <div className="auth-container">
-        <h1>Todo List App</h1>
+        <h1>Todo App</h1>
         {error && <p className="error-message">{error}</p>}
         
         {isRegistering ? (
@@ -380,7 +380,7 @@ function App() {
           value={newTask.status}
           onChange={handleInputChange}
         >
-          <option value="pending">Pending</option>
+          <option value="todo">todo</option>
           <option value="in_progress">In Progress</option>
           <option value="completed">Completed</option>
           <option value="on_hold">On Hold</option>
@@ -407,12 +407,13 @@ function App() {
             </div>
             <div className="task-header-title">Task</div>
             <div className="task-header-status">Status</div>
-            <div className="task-header-actions">Actions</div>
+            
           </div>
           
           <ul className="task-list">
             {tasks.map((task) => (
-              <li key={task.id} className={`task-item ${task.status} ${selectedTasks.includes(task.id) ? 'selected' : ''}`}>
+              <li key={task.id} className={`task-item ${task.status.replace("_", "-")} ${selectedTasks.includes(task.id) ? 'selected' : ''}`}>
+
                 <div className="task-checkbox">
                   <input
                     type="checkbox"
@@ -425,13 +426,10 @@ function App() {
                   <p>{task.description}</p>
                 </div>
                 <div className="task-meta">
-                  <span className="status-badge">{task.status.replace("_", " ")}</span>
-                </div>
-
-                <div className="task-actions">
-                  <select
+                <select
                     value={task.status}
                     onChange={(e) => updateTaskStatus(task.id, e.target.value)}
+                    className="status-dropdown"
                   >
                     <option value="todo">todo</option>
                     <option value="in_progress">In Progress</option>
@@ -439,8 +437,9 @@ function App() {
                     <option value="on_hold">On Hold</option>
                     <option value="cancelled">Cancelled</option>
                   </select>
-                
                 </div>
+
+                
               </li>
             ))}
           </ul>
@@ -452,7 +451,7 @@ function App() {
           onClick={handleDeleteSelected}
           disabled={selectedCancelledTasksCount === 0}
         >
-          Delete All
+          Delete 
         </button>
         <button 
           className="export-button"
@@ -475,7 +474,6 @@ function App() {
           <div className="modal-content">
             <h3>Confirm Delete</h3>
             <p>Are you sure you want to delete {tasksToDelete.length} task(s)?</p>
-            <p>This action cannot be undone.</p>
             <div className="modal-actions">
               <button onClick={cancelDelete} className="cancel-button">Cancel</button>
               <button onClick={confirmDelete} className="confirm-button">Delete</button>
