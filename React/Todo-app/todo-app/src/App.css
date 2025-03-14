@@ -1,4 +1,4 @@
-/* App.css */
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -9,6 +9,7 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f5f5f5;
   color: #333;
+  background-image: url('https://www.transparenttextures.com/patterns/notebook-dark.png');
 }
 
 .to-do {
@@ -151,27 +152,6 @@ button:disabled {
   cursor: pointer;
 }
 
-.task-item.pending {
-  border-left-color: #3498db;
-}
-
-.task-item.in_progress {
-  border-left-color: #f39c12;
-}
-
-.task-item.completed {
-  border-left-color: #2ecc71;
-}
-
-.task-item.on_hold {
-  border-left-color: #9b59b6;
-}
-
-.task-item.cancelled {
-  border-left-color: #e74c3c;
-  opacity: 0.7;
-}
-
 .task-content {
   flex: 1;
 }
@@ -272,12 +252,7 @@ button:disabled {
   color: #2c3e50;
 }
 
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
-}
+
 
 .cancel-button {
   background-color: #95a5a6;
@@ -322,3 +297,21 @@ button:disabled {
 .download-icon:before {
   content: "⬇️";
 }
+.task-list-header {
+  display: flex;
+  background-color: #f5f5f5;
+  padding: 10px;
+  font-weight: bold;
+  border-bottom: 1px solid #ddd;
+}
+
+.task-header-title {
+  flex: 2;
+}
+
+.task-header-status {
+  flex: 1;
+}
+
+
+
